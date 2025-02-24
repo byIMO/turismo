@@ -82,49 +82,80 @@
         <p>&copy; 2023 Turismo Aventura. Todos los derechos reservados.</p>
     </footer>
 
-    <script src="js/script.js"></script>
     <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+        // Importa los módulos de Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyBgwQk1Sp9U-usozLUMPQZmhGIGli4Ft6E",
-    authDomain: "turismo-547ed.firebaseapp.com",
-    projectId: "turismo-547ed",
-    storageBucket: "turismo-547ed.firebasestorage.app",
-    messagingSenderId: "345136133433",
-    appId: "1:345136133433:web:d1d8920e1910d6b870e4e8",
-    measurementId: "G-1W8PK0FSNT"
-  };
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBgwQk1Sp9U-usozLUMPQZmhGIGli4Ft6E",
+            authDomain: "turismo-547ed.firebaseapp.com",
+            projectId: "turismo-547ed",
+            storageBucket: "turismo-547ed.firebasestorage.app",
+            messagingSenderId: "345136133433",
+            appId: "1:345136133433:web:d1d8920e1910d6b870e4e8",
+            measurementId: "G-1W8PK0FSNT"
+        };
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
-    <!-- Agrega esto antes del cierre de </body> -->
-<script src="https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js"></script>
-<script>
-    // Configura Firebase
-    const firebaseConfig = {
-        apiKey: "TU_API_KEY",
-        authDomain: "TU_DOMAIN.firebaseapp.com",
-        projectId: "TU_PROJECT_ID",
-        storageBucket: "TU_BUCKET.appspot.com",
-        messagingSenderId: "TU_SENDER_ID",
-        appId: "TU_APP_ID"
-    };
-    firebase.initializeApp(firebaseConfig);
+        // Inicializa Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-    const db = firebase.firestore();
-    const auth = firebase.auth();
-</script>
-<script src="js/script.js"></script>
+        // Maneja el formulario de reservas
+        document.getElementById('reservation-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const date = document.getElementById('date').value;
+            const service = document.getElementById('service').value;
+
+            const reservation = {
+                name,
+                email,
+                date,
+                service
+            };
+
+            try {
+                // Guardar en Firestore
+                await addDoc(collection(db, 'reservations'), reservation);
+                alert("Reserva realizada con éxito.");
+                updateAvailability();
+                this.reset();
+            } catch (error) {
+                console.error("Error al guardar la reserva: ", error);
+            }
+        });
+
+        // Cargar y mostrar disponibilidad
+        async function updateAvailability() {
+            const availability = document.getElementById('availability');
+            availability.innerHTML = '<h3>Disponibilidad</h3>';
+
+            try {
+                const querySnapshot = await getDocs(collection(db, 'reservations'));
+                if (querySnapshot.empty) {
+                    availability.innerHTML += '<p>Todas las fechas están disponibles.</p>';
+                } else {
+                    querySnapshot.forEach((doc) => {
+                        const res = doc.data();
+                        availability.innerHTML += `
+                            <div class="reservation-item">
+                                <p><strong>Fecha:</strong> ${res.date}</p>
+                                <p><strong>Servicio:</strong> ${res.service}</p>
+                            </div>
+                        `;
+                    });
+                }
+            } catch (error) {
+                console.error("Error al obtener reservas: ", error);
+            }
+        }
+
+        // Mostrar disponibilidad al cargar la página
+        updateAvailability();
+    </script>
 </body>
 </html>
