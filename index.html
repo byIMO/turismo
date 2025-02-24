@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turismo Aventura</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>Turismo Aventura</h1>
+            <p>Explora el mundo con nosotros</p>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#servicios">Servicios</a></li>
+                <li><a href="#reservas">Reservas</a></li>
+                <li><a href="admin.html">Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="inicio" class="hero">
+        <div class="hero-content">
+            <h2>Bienvenidos a Turismo Aventura</h2>
+            <p>Descubre los destinos más increíbles del mundo con nuestros paquetes exclusivos.</p>
+            <a href="#reservas" class="btn">Reserva Ahora</a>
+        </div>
+    </section>
+
+    <section id="servicios" class="services">
+        <h2>Nuestros Servicios</h2>
+        <div class="service-list">
+            <div class="service-item">
+                <i class="fas fa-hiking"></i>
+                <h3>Excursiones</h3>
+                <p>Explora montañas, bosques y playas con nuestras excursiones guiadas por expertos.</p>
+            </div>
+            <div class="service-item">
+                <i class="fas fa-hotel"></i>
+                <h3>Alojamiento</h3>
+                <p>Disfruta de estancias en los mejores hoteles y resorts con todas las comodidades.</p>
+            </div>
+            <div class="service-item">
+                <i class="fas fa-car"></i>
+                <h3>Transporte</h3>
+                <p>Viaja con seguridad y comodidad en nuestros vehículos privados o en transporte grupal.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="reservas" class="reservations">
+        <h2>Reserva tu Aventura</h2>
+        <form id="reservation-form">
+            <label for="name">Nombre:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="date">Fecha:</label>
+            <input type="date" id="date" name="date" required>
+
+            <label for="service">Servicio:</label>
+            <select id="service" name="service" required>
+                <option value="excursion">Excursión</option>
+                <option value="alojamiento">Alojamiento</option>
+                <option value="transporte">Transporte</option>
+            </select>
+
+            <button type="submit">Reservar</button>
+        </form>
+
+        <h3>Disponibilidad</h3>
+        <div id="availability"></div>
+    </section>
+
+    <footer>
+        <p>&copy; 2023 Turismo Aventura. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <!-- Agrega esto antes del cierre de </body> -->
+<script src="https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js"></script>
+<script>
+    // Configura Firebase
+    const firebaseConfig = {
+        apiKey: "TU_API_KEY",
+        authDomain: "TU_DOMAIN.firebaseapp.com",
+        projectId: "TU_PROJECT_ID",
+        storageBucket: "TU_BUCKET.appspot.com",
+        messagingSenderId: "TU_SENDER_ID",
+        appId: "TU_APP_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+</script>
+<script src="js/script.js"></script>
+</body>
+</html>
