@@ -133,7 +133,7 @@
     // Cargar y mostrar disponibilidad
     async function updateAvailability() {
         const availability = document.getElementById('availability');
-        availability.innerHTML = '<h3>Disponibilidad</h3>';
+        availability.innerHTML = '<h3>Días ocupados</h3>';
 
         try {
             const querySnapshot = await getDocs(collection(db, 'reservations'));
