@@ -83,79 +83,80 @@
     </footer>
 
     <script type="module">
-        // Importa los módulos de Firebase
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+    // Importa los módulos de Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
-        // Configuración de Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyBgwQk1Sp9U-usozLUMPQZmhGIGli4Ft6E",
-            authDomain: "turismo-547ed.firebaseapp.com",
-            projectId: "turismo-547ed",
-            storageBucket: "turismo-547ed.firebasestorage.app",
-            messagingSenderId: "345136133433",
-            appId: "1:345136133433:web:d1d8920e1910d6b870e4e8",
-            measurementId: "G-1W8PK0FSNT"
+    // Configuración de Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyBgwQk1Sp9U-usozLUMPQZmhGIGli4Ft6E",
+        authDomain: "turismo-547ed.firebaseapp.com",
+        projectId: "turismo-547ed",
+        storageBucket: "turismo-547ed.firebasestorage.app",
+        messagingSenderId: "345136133433",
+        appId: "1:345136133433:web:d1d8920e1910d6b870e4e8",
+        measurementId: "G-1W8PK0FSNT"
+    };
+
+    // Inicializa Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Maneja el formulario de reservas
+    document.getElementById('reservation-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const date = document.getElementById('date').value;
+        const service = document.getElementById('service').value;
+
+        const reservation = {
+            name,
+            email,
+            date,
+            service
         };
 
-        // Inicializa Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // Maneja el formulario de reservas
-        document.getElementById('reservation-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
-
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const date = document.getElementById('date').value;
-            const service = document.getElementById('service').value;
-
-            const reservation = {
-                name,
-                email,
-                date,
-                service
-            };
-
-            try {
-                // Guardar en Firestore
-                await addDoc(collection(db, 'reservations'), reservation);
-                alert("Reserva realizada con éxito.");
-                updateAvailability();
-                this.reset();
-            } catch (error) {
-                console.error("Error al guardar la reserva: ", error);
-            }
-        });
-
-        // Cargar y mostrar disponibilidad
-        async function updateAvailability() {
-            const availability = document.getElementById('availability');
-            availability.innerHTML = '<h3>Disponibilidad</h3>';
-
-            try {
-                const querySnapshot = await getDocs(collection(db, 'reservations'));
-                if (querySnapshot.empty) {
-                    availability.innerHTML += '<p>Todas las fechas están disponibles.</p>';
-                } else {
-                    querySnapshot.forEach((doc) => {
-                        const res = doc.data();
-                        availability.innerHTML += `
-                            <div class="reservation-item">
-                                <p><strong>Fecha:</strong> ${res.date}</p>
-                                <p><strong>Servicio:</strong> ${res.service}</p>
-                            </div>
-                        `;
-                    });
-                }
-            } catch (error) {
-                console.error("Error al obtener reservas: ", error);
-            }
+        try {
+            // Guardar en Firestore
+            await addDoc(collection(db, 'reservations'), reservation);
+            alert("Reserva realizada con éxito.");
+            updateAvailability();
+            this.reset();
+        } catch (error) {
+            console.error("Error al guardar la reserva: ", error);
+            alert("Hubo un error al guardar la reserva. Por favor, inténtalo de nuevo.");
         }
+    });
 
-        // Mostrar disponibilidad al cargar la página
-        updateAvailability();
-    </script>
+    // Cargar y mostrar disponibilidad
+    async function updateAvailability() {
+        const availability = document.getElementById('availability');
+        availability.innerHTML = '<h3>Disponibilidad</h3>';
+
+        try {
+            const querySnapshot = await getDocs(collection(db, 'reservations'));
+            if (querySnapshot.empty) {
+                availability.innerHTML += '<p>Todas las fechas están disponibles.</p>';
+            } else {
+                querySnapshot.forEach((doc) => {
+                    const res = doc.data();
+                    availability.innerHTML += `
+                        <div class="reservation-item">
+                            <p><strong>Fecha:</strong> ${res.date}</p>
+                            <p><strong>Servicio:</strong> ${res.service}</p>
+                        </div>
+                    `;
+                });
+            }
+        } catch (error) {
+            console.error("Error al obtener reservas: ", error);
+        }
+    }
+
+    // Mostrar disponibilidad al cargar la página
+    updateAvailability();
+</script>
 </body>
 </html>
